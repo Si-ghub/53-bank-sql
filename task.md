@@ -1,6 +1,6 @@
 **Bankas**
 
-- banke vienintelė valiuta;
+- banke vienintelė valiuta (EUR);
 - registruojasi vartotojai;
 - gali susikurti sąskaitas (default, viena sukuriame iš karto registracijos metu);
 - gali įsinešti pinigų;
