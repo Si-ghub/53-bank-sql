@@ -58,7 +58,7 @@ db.createTableAccount = async (connection) => {
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         `user_id` int(10) NOT NULL,\
                         `account_number` char(16) NOT NULL,\
-                        `amount` decimal(10,2) NOT NULL,\
+                        `balance` float(12,2) NOT NULL,\
                         `active` char(5) COLLATE utf8_swedish_ci NOT NULL DEFAULT "TRUE",\
                         `currency` char(10) COLLATE utf8_swedish_ci NOT NULL,\
                         PRIMARY KEY(`id`)\
