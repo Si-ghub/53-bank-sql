@@ -66,8 +66,8 @@ db.createTableAccount = async (connection) => {
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
         //uzdedam apsauga nuo istrinimo
-        const sql2 = 'ALTER TABLE `accounts` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;'
-        await connection.execute(sql2);
+        // const sql2 = 'ALTER TABLE `account` ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;'
+        // await connection.execute(sql2);
     } catch (error) {
         console.log('Nepavyko sukurti saskaitos');
         console.log(error);

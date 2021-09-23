@@ -43,7 +43,7 @@ Account.deposit = async (connection, account_id, amount) => {
 Account.withdraw = async (connection, account_id, amount) => {
     let balance = await Account.balance(connection, account_id);
     if (amount > balance) {
-        return `Nepakanka lesu`
+        return `Nepakanka lesu, pinigu isemimas negalimas.`
     }
     const sql = 'UPDATE `account` \
                     SET `balance` = `balance` - ' + amount + '\
@@ -76,11 +76,11 @@ Account.balance = async (connection, account_id) => {
 Account.moneyTransfer = async (connection, sender_account_id, receiver_account_id, amount) => {
     let balance = await Account.balance(connection, sender_account_id);
     if (amount > balance) {
-        return `Nepakanka lesu`
+        return `Nepakanka lesu, pavedimas negalimas.`
     }
     let transferedAmount = await Account.withdraw(connection, sender_account_id, amount);
     let receivedAmount = await Account.deposit(connection, receiver_account_id, amount);
-    return `Pinigai pervesti i nurodyta saskaita`
+    return `Pinigai pervesti i nurodyta saskaita.`
 }
 
 /**
@@ -92,18 +92,18 @@ Account.moneyTransfer = async (connection, sender_account_id, receiver_account_i
 Account.delete = async (connection, account_id) => {
     let accountStatus = await Account.isActive(connection, account_id);
     if (!accountStatus) {
-        return `Pavedimas negalimas, nes saskaita neegzistuoja`
+        return `Pavedimas negalimas, nes saskaita neegzistuoja.`
     }
     let balance = await Account.balance(connection, account_id);
     if (balance !== 0) {
-        return `Saskaitoje yra lesu, todel istrinti negalima`
+        return `Saskaitoje yra lesu, todel istrinti negalima.`
     }
     const sql = 'UPDATE`account`\
                     SET `active` = "FALSE"\
                     WHERE`account`.`id`=' + account_id;
 
     const [rows] = await connection.execute(sql);
-    return `Saskaita sekmingai istrinta`
+    return `Saskaita sekmingai istrinta.`
 }
 
 /**
