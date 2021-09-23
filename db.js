@@ -42,6 +42,7 @@ db.createTableUser = async (connection) => {
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         `first_name` char(20) COLLATE utf8_swedish_ci NOT NULL,\
                         `last_name` char(20) COLLATE utf8_swedish_ci NOT NULL,\
+                        `active` char(5) COLLATE utf8_swedish_ci NOT NULL DEFAULT "TRUE",\
                         PRIMARY KEY(`id`)\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
@@ -59,16 +60,20 @@ db.createTableAccount = async (connection) => {
                         `user_id` int(10) NOT NULL,\
                         `account_number` char(16) NOT NULL,\
                         `balance` float(12,2) NOT NULL,\
-                        `active` char(5) COLLATE utf8_swedish_ci NOT NULL DEFAULT "TRUE",\
                         `currency` char(10) COLLATE utf8_swedish_ci NOT NULL,\
+                        `active` char(5) COLLATE utf8_swedish_ci NOT NULL DEFAULT "TRUE",\
                         PRIMARY KEY(`id`)\
                     ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_swedish_ci';
         await connection.execute(sql);
+        //uzdedam apsauga nuo istrinimo
+        const sql2 = 'ALTER TABLE `accounts` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;'
+        await connection.execute(sql2);
     } catch (error) {
         console.log('Nepavyko sukurti saskaitos');
         console.log(error);
         return error;
     }
 }
+
 
 module.exports = db;

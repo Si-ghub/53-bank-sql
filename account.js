@@ -19,9 +19,9 @@ Account.create = async (connection, user_id, currency) => {
 }
 
 /**
- * Pinigu inesimas i nurodyta saskaita
+ * Pinigu inesimas i nurodyta saskaita.
  * @param {Object} connection Objektas, su kuriuo kvieciame duombazes manipuliavimo metodus.
- * @param {number} account_id Vartotojo saskaitos ID
+ * @param {number} account_id Vartotojo saskaitos ID.
  * @param {number} amount Pinigu suma.
  * @returns {Promise<string>} Pranesimas apie inesta pinigu suma.
  */
@@ -63,6 +63,61 @@ Account.balance = async (connection, account_id) => {
                     WHERE id = ' + account_id;
     const [rows] = await connection.execute(sql);
     return rows[0].balance;
+}
+
+/**
+ * Pinigu pervedimas tarp skirtingu vartotoju ir skirtingu saskaitu.
+ * @param {Object} connection Objektas, su kuriuo kvieciame duombazes manipuliavimo metodus.
+ * @param {number} sender_account_id Siuntejo saskaitos ID.
+ * @param {number} receiver_account_id Gavejo saskaitos ID.
+ * @param {number} amount Pervedimo suma.
+ * @returns {Promise<string>} Pranesimas apie sekmingai/nesekmingai atlikta pavedima.
+ */
+Account.moneyTransfer = async (connection, sender_account_id, receiver_account_id, amount) => {
+    let balance = await Account.balance(connection, sender_account_id);
+    if (amount > balance) {
+        return `Nepakanka lesu`
+    }
+    let transferedAmount = await Account.withdraw(connection, sender_account_id, amount);
+    let receivedAmount = await Account.deposit(connection, receiver_account_id, amount);
+    return `Pinigai pervesti i nurodyta saskaita`
+}
+
+/**
+ * Saskaitos istrynimas, jei saskaitos likutis = 0.
+ * @param {Object} connection Objektas, su kuriuo kvieciame duombazes manipuliavimo metodus.
+ * @param {number} account_id Saskaitos ID.
+ * @returns {Promise<string>} Pranesimas apie sekminga/nesekminga saskaitos istrynima.
+ */
+Account.delete = async (connection, account_id) => {
+    let accountStatus = await Account.isActive(connection, account_id);
+    if (!accountStatus) {
+        return `Pavedimas negalimas, nes saskaita neegzistuoja`
+    }
+    let balance = await Account.balance(connection, account_id);
+    if (balance !== 0) {
+        return `Saskaitoje yra lesu, todel istrinti negalima`
+    }
+    const sql = 'UPDATE`account`\
+                    SET `active` = "FALSE"\
+                    WHERE`account`.`id`=' + account_id;
+
+    const [rows] = await connection.execute(sql);
+    return `Saskaita sekmingai istrinta`
+}
+
+/**
+ * Ar aktyvi saskaita?
+ * @param {Object} connection Objektas, su kuriuo kvieciame duombazes manipuliavimo metodus.
+ * @param {number} account_id Saskaitos ID.
+ * @returns  {Promise<string>} Pranesimas apie aktyvia/neaktyvia saskaita (TRUE/FALSE).
+ */
+Account.isActive = async (connection, account_id) => {
+    const sql = 'SELECT `active`\
+                    FROM `account`\
+                    WHERE `account`.`id` =' + account_id;
+    const [rows] = await connection.execute(sql);
+    return rows[0].active === "TRUE";
 }
 
 module.exports = Account;

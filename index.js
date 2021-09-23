@@ -29,10 +29,6 @@ app.init = async () => {
     console.log(createUser4);
     console.log(createUser5);
 
-
-
-
-
     // ACCOUNT
     // create
     console.log('');
@@ -41,12 +37,15 @@ app.init = async () => {
     const createAccount3 = await Account.create(conn, 3, 'EUR');
     const createAccount4 = await Account.create(conn, 4, 'EUR');
     const createAccount5 = await Account.create(conn, 5, 'EUR');
+    const createAccount6 = await Account.create(conn, 5, 'EUR');
 
     console.log(createAccount1);
     console.log(createAccount2);
     console.log(createAccount3);
     console.log(createAccount4);
     console.log(createAccount5);
+    console.log(createAccount6);
+
 
     // deposit
     console.log('');
@@ -74,9 +73,28 @@ app.init = async () => {
     console.log(accountBalance1);
     console.log(accountBalance2);
 
+    // money transfer
+    console.log('')
+    const moneyTransfer1 = await Account.moneyTransfer(conn, 3, 4, 25);
+    const moneyTransfer2 = await Account.moneyTransfer(conn, 4, 2, 100);
 
+    console.log(moneyTransfer1);
+    console.log(moneyTransfer2);
 
+    // delete account
+    console.log('')
+    const deleteAccount1 = await Account.delete(conn, 1);
+    const deleteAccount2 = await Account.delete(conn, 2);
+
+    console.log(deleteAccount1);
+    console.log(deleteAccount2);
+
+    // is active account?
+    let accountIsactive = await Account.isActive(conn, 1);
+
+    console.log(accountIsactive);
 }
+
 app.init();
 
 module.exports = app;
