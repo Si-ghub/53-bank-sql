@@ -18,4 +18,42 @@ User.create = async (connection, user_first_name, user_last_name) => {
     return `"Medziu" banko vartotojas ${user_first_name} ${user_last_name} buvo sekmingai sukurtas`
 }
 
+User.delete = async (connection, user_id) => {
+    // vartotojas turi egzistuoti 
+    let userStatus = await User.isActive(connection, user_id);
+    if (!userStatus) {
+        return `Vartotojas neegzistuoja, veiksmas negalimas.`
+    }
+
+    const sql = 'SELECT `id` \
+                    FROM`account`\
+                        WHERE `user_id` = ' + user_id;
+
+    const [rows] = await connection.execute(sql);
+    console.log(rows);
+
+    for (const { id } of rows) {
+        await Account.delete(connection, id);
+    }
+
+
+    // vartotojo saskaitoje/saskaitose negali buti jokio pinigu likucio
+    // let balance = await Account.balance(connection, user_id, account_id);
+    // if (balance !== 0) {
+    //     return `Saskaitoje yra pinigu likutis, todel istrinti negalima.`
+    // }
+    // deaktyvuojame visas to vartotojo saskaitas
+
+
+    // deaktyvuojame vartotoja (deaktyvavus vartotoja vel jo aktyvuoti negalime)
+}
+
+User.isActive = async (connection, user_id) => {
+    const sql = 'SELECT `active`\
+                    FROM `user`\
+                    WHERE `user`.`id` =' + user_id;
+    const [rows] = await connection.execute(sql);
+    return rows[0].active === "TRUE";
+}
+
 module.exports = User;
