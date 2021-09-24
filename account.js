@@ -96,7 +96,7 @@ Account.delete = async (connection, account_id) => {
     }
     let balance = await Account.balance(connection, account_id);
     if (balance !== 0) {
-        return `Saskaitoje yra lesu, todel istrinti negalima.`
+        return `Saskaitoje yra pinigu likutis, todel istrinti negalima.`
     }
     const sql = 'UPDATE`account`\
                     SET `active` = "FALSE"\

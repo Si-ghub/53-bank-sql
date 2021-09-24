@@ -1,3 +1,4 @@
+const Account = require('./account');
 const User = {};
 
 /**
@@ -11,10 +12,10 @@ User.create = async (connection, user_first_name, user_last_name) => {
     const sql = 'INSERT INTO `user`\
                     (`id`, `first_name`, `last_name`)\
                 VALUES (NULL, "'+ user_first_name + '", "' + user_last_name + '")';
-    const [rows] = await connection.execute(sql);
+    const [user] = await connection.execute(sql); // irasome
+
+    const createAccount = await Account.create(connection, user.insertId, 'EUR');
     return `"Medziu" banko vartotojas ${user_first_name} ${user_last_name} buvo sekmingai sukurtas`
 }
-
-
 
 module.exports = User;
