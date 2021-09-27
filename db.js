@@ -38,7 +38,7 @@ db.createDatabase = async ({ database, host, user }) => {
 
 db.createTableUser = async (connection) => {
     try {
-        const sql = 'CREATE TABLE IF NOT EXISTS `user` (\
+        const sql = 'CREATE TABLE IF NOT EXISTS `users` (\
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         `first_name` char(20) COLLATE utf8_swedish_ci NOT NULL,\
                         `last_name` char(20) COLLATE utf8_swedish_ci NOT NULL,\
@@ -55,7 +55,7 @@ db.createTableUser = async (connection) => {
 
 db.createTableAccount = async (connection) => {
     try {
-        const sql = 'CREATE TABLE IF NOT EXISTS `account` (\
+        const sql = 'CREATE TABLE IF NOT EXISTS `accounts` (\
                         `id` int(10) NOT NULL AUTO_INCREMENT,\
                         `user_id` int(10) NOT NULL,\
                         `account_number` char(16) NOT NULL,\

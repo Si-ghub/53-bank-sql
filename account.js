@@ -11,7 +11,7 @@ const Account = {};
  */
 Account.create = async (connection, user_id, currency) => {
     const userAccountNumber = helpers.createAccountNumber();
-    const sql = 'INSERT INTO `account`\
+    const sql = 'INSERT INTO `accounts`\
                 (`id`, `user_id`, `account_number`, `balance`, `currency`)\
                VALUES (NULL, "'+ user_id + '", "' + userAccountNumber + '", 0 , "' + currency + '")'
     const [rows] = await connection.execute(sql);
@@ -26,7 +26,7 @@ Account.create = async (connection, user_id, currency) => {
  * @returns {Promise<string>} Pranesimas apie inesta pinigu suma.
  */
 Account.deposit = async (connection, account_id, amount) => {
-    const sql = 'UPDATE `account` \
+    const sql = 'UPDATE `accounts` \
                     SET `balance` =`balance` + ' + amount + '\
                     WHERE `id` = ' + account_id;
     const [rows] = await connection.execute(sql);
@@ -45,7 +45,7 @@ Account.withdraw = async (connection, account_id, amount) => {
     if (amount > balance) {
         return `Nepakanka lesu, pinigu isemimas negalimas.`
     }
-    const sql = 'UPDATE `account` \
+    const sql = 'UPDATE `accounts` \
                     SET `balance` = `balance` - ' + amount + '\
                     WHERE id = ' + account_id;
     const [rows] = await connection.execute(sql);
@@ -59,7 +59,7 @@ Account.withdraw = async (connection, account_id, amount) => {
  * @returns {Promise<number>} Informacija apie saskaitos likuti/balansa.
  */
 Account.balance = async (connection, account_id) => {
-    const sql = 'SELECT * FROM `account` \
+    const sql = 'SELECT * FROM `accounts` \
                     WHERE id = ' + account_id;
     const [rows] = await connection.execute(sql);
     return rows[0].balance;
@@ -98,9 +98,9 @@ Account.delete = async (connection, account_id) => {
     if (balance !== 0) {
         return `Saskaitoje yra pinigu likutis, todel istrinti negalima.`
     }
-    const sql = 'UPDATE `account`\
+    const sql = 'UPDATE `accounts`\
                     SET `active` = "FALSE"\
-                    WHERE`account`.`id`=' + account_id;
+                    WHERE`accounts`.`id`=' + account_id;
 
     const [rows] = await connection.execute(sql);
     return `Saskaita sekmingai istrinta.`
@@ -114,8 +114,8 @@ Account.delete = async (connection, account_id) => {
  */
 Account.isActive = async (connection, account_id) => {
     const sql = 'SELECT `active`\
-                    FROM `account`\
-                    WHERE `account`.`id` =' + account_id;
+                    FROM `accounts`\
+                    WHERE `accounts`.`id` =' + account_id;
     const [rows] = await connection.execute(sql);
     return rows[0].active === "TRUE";
 }

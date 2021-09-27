@@ -9,7 +9,7 @@ app.init = async () => {
     const conn = await db.init({
         host: 'localhost',
         user: 'root',
-        database: 'bank',
+        database: 'bank1',
     });
 
     // LOGIC BELOW
@@ -90,7 +90,7 @@ app.init = async () => {
     console.log(deleteAccount2);
 
     // delete user
-    const deleteUser1 = await User.delete(conn, 2);
+    const deleteUser1 = await User.delete(conn, 3);
 
     console.log(deleteUser1);
 
